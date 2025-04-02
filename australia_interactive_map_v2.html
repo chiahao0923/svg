@@ -97,5 +97,32 @@
 </g>
 
 </svg>
+<div id="tooltip" class="tooltip"></div>
+</div>
+<script>
+  const tooltip = document.getElementById('tooltip');
+
+  document.querySelectorAll('.city').forEach(city => {
+    city.addEventListener('mouseenter', e => {
+      const name = city.getAttribute('data-city');
+      tooltip.textContent = name;
+      tooltip.style.opacity = 1;
+    });
+
+    city.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = 0;
+    });
+
+    city.addEventListener('mousemove', e => {
+      tooltip.style.left = e.pageX + 'px';
+      tooltip.style.top = (e.pageY - 20) + 'px';
+    });
+
+    city.addEventListener('click', () => {
+      const url = city.getAttribute('data-url');
+      window.open(url, '_blank');
+    });
+  });
+</script>  
 </body>
 </html>
