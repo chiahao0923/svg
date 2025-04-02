@@ -8,7 +8,7 @@
     body {
       margin: 0;
       background: transparent;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .map-container {
       position: relative;
@@ -19,38 +19,46 @@
     svg {
       width: 100%;
       height: auto;
+      display: block;
     }
     .city {
-      fill: #1565c0;
+      fill: #1976d2;
       cursor: pointer;
-      transition: fill 0.3s ease;
+      stroke: #ffffff;
+      stroke-width: 2px;
+      filter: drop-shadow(0 0 3px rgba(21,101,192,0.3));
+      transition: all 0.3s ease;
     }
     .city:hover {
-      fill: #42a5f5;
+      fill: #64b5f6;
+      filter: drop-shadow(0 0 8px rgba(33,150,243,0.7));
     }
     text.city-label {
       fill: #0d47a1;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 20px;
-      text-shadow: 1px 1px 3px white, -1px -1px 3px white;
-      transition: transform 0.3s ease, fill 0.3s ease;
+      text-shadow: 0 0 4px #fff;
+      pointer-events: all;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
     text.city-label.hovered {
-      transform: scale(1.2);
-      fill: #1976d2;
+      fill: #42a5f5;
+      text-shadow: 0 0 8px rgba(66,165,245,0.9);
     }
     .tooltip {
       position: absolute;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.85);
       color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 6px 10px;
+      border-radius: 5px;
       font-size: 14px;
       pointer-events: none;
       opacity: 0;
       transform: translate(-50%, -100%);
       transition: opacity 0.2s ease;
+      white-space: nowrap;
+      z-index: 10;
     }
   </style>
 </head>
@@ -122,13 +130,16 @@
       const name = dot.getAttribute('data-city');
       tooltip.textContent = name;
       tooltip.style.opacity = 1;
+      const label = [...cityLabels].find(label => label.textContent.trim() === name);
+      if (label) label.classList.add('hovered');
     });
     dot.addEventListener('mouseleave', () => {
       tooltip.style.opacity = 0;
+      cityLabels.forEach(label => label.classList.remove('hovered'));
     });
     dot.addEventListener('mousemove', e => {
       tooltip.style.left = e.pageX + 'px';
-      tooltip.style.top = (e.pageY - 20) + 'px';
+      tooltip.style.top = (e.pageY - 25) + 'px';
     });
     dot.addEventListener('click', () => {
       const url = dot.getAttribute('data-url');
@@ -139,18 +150,21 @@
   cityLabels.forEach(label => {
     label.addEventListener('mouseenter', () => {
       label.classList.add('hovered');
+      const dot = [...cityDots].find(dot => dot.getAttribute('data-city') === label.textContent.trim());
+      if (dot) dot.classList.add('hovered');
     });
     label.addEventListener('mouseleave', () => {
       label.classList.remove('hovered');
+      cityDots.forEach(dot => dot.classList.remove('hovered'));
     });
     label.addEventListener('click', () => {
-      const matchingDot = [...cityDots].find(dot => dot.getAttribute('data-city') === label.textContent.trim());
-      if (matchingDot) {
-        const url = matchingDot.getAttribute('data-url');
+      const dot = [...cityDots].find(dot => dot.getAttribute('data-city') === label.textContent.trim());
+      if (dot) {
+        const url = dot.getAttribute('data-url');
         window.open(url, '_blank');
       }
     });
   });
-</script>  
+</script>
 </body>
 </html>
