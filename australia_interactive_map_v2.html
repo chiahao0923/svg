@@ -7,13 +7,14 @@
   <style>
     body {
       margin: 0;
-      background: #f0f8ff;
+      background: transparent;
       font-family: Arial, sans-serif;
     }
     .map-container {
       position: relative;
       max-width: 100%;
       margin: auto;
+      background-color: white;
     }
     svg {
       width: 100%;
@@ -25,6 +26,18 @@
       transition: fill 0.3s ease;
     }
     .city:hover {
+      fill: #42a5f5;
+    }
+    text.city-label {
+      fill: #0d47a1;
+      font-weight: bold;
+      font-size: 18px;
+      pointer-events: none;
+      opacity: 0.85;
+      transition: transform 0.3s ease, fill 0.3s ease;
+    }
+    text.city-label.hovered {
+      transform: scale(1.15);
       fill: #42a5f5;
     }
     .tooltip {
@@ -101,26 +114,34 @@
 </div>
 <script>
   const tooltip = document.getElementById('tooltip');
+  const cityDots = document.querySelectorAll('.city');
+  const cityLabels = document.querySelectorAll('text.city-label');
 
-  document.querySelectorAll('.city').forEach(city => {
-    city.addEventListener('mouseenter', e => {
-      const name = city.getAttribute('data-city');
+  cityDots.forEach(dot => {
+    dot.addEventListener('mouseenter', () => {
+      const name = dot.getAttribute('data-city');
       tooltip.textContent = name;
       tooltip.style.opacity = 1;
     });
-
-    city.addEventListener('mouseleave', () => {
+    dot.addEventListener('mouseleave', () => {
       tooltip.style.opacity = 0;
     });
-
-    city.addEventListener('mousemove', e => {
+    dot.addEventListener('mousemove', e => {
       tooltip.style.left = e.pageX + 'px';
       tooltip.style.top = (e.pageY - 20) + 'px';
     });
-
-    city.addEventListener('click', () => {
-      const url = city.getAttribute('data-url');
+    dot.addEventListener('click', () => {
+      const url = dot.getAttribute('data-url');
       window.open(url, '_blank');
+    });
+  });
+
+  cityLabels.forEach(label => {
+    label.addEventListener('mouseenter', () => {
+      label.classList.add('hovered');
+    });
+    label.addEventListener('mouseleave', () => {
+      label.classList.remove('hovered');
     });
   });
 </script>  
